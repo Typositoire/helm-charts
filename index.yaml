@@ -1,1 +1,13 @@
-.cr-index/index.yaml
+apiVersion: v1
+entries:
+  go-vln:
+  - apiVersion: v2
+    appVersion: 1.0.0-rc1
+    created: "2019-12-09T11:11:47.230787528-05:00"
+    description: A Helm chart for go-vln
+    digest: df6b97b446483f3d861732ae4afd667eabf1b67c6d05aef779366c77a06eb1b2
+    name: go-vln
+    urls:
+    - https://github.com/Typositoire/helm-charts/releases/download/go-vln-0.1.0/go-vln-0.1.0.tgz
+    version: 0.1.0
+generated: "2019-12-09T11:11:46.667658229-05:00"

@@ -3,10 +3,12 @@
 # Declare variables to be passed into your templates.
 vln:
   backend: file
-  database: |
-    {
-      "/v1/secret/cow": "/v1/secret/meuh"
-    }
+  ## Either or.
+  # database_file: files/db.json
+  # database: |
+  #   {
+  #     "/v1/secret/cow": "/v1/secret/meuh"
+  #   }
   file:
     path: /db.json
   vault:

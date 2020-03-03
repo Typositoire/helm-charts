@@ -3,6 +3,15 @@ entries:
   go-vln:
   - apiVersion: v2
     appVersion: 1.0.0-rc1
+    created: "2020-03-03T09:18:35.988933523-05:00"
+    description: A Helm chart for go-vln
+    digest: a32609255c16ce02ddbd80cd54cdc205bdcfe7b7c9d37c539b25c89440cd71b4
+    name: go-vln
+    urls:
+    - https://github.com/Typositoire/helm-charts/releases/download/go-vln-0.2.1/go-vln-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 1.0.0-rc1
     created: "2020-02-28T17:56:30.425523264-05:00"
     description: A Helm chart for go-vln
     digest: 878e7d0ffc7333de94241331fc5f657167f45788ed5be1e277905d2357c317f0

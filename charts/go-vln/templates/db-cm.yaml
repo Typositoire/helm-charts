@@ -5,6 +5,8 @@ metadata:
 data:
   {{- if .Values.vln.database }}
   db.json: {{ .Values.vln.database | toJson }}
+  {{- else if .Values.vln.database_file }}
+  db.json: {{.Files.Get .Values.vln.database_file | printf "%s" | indent 4}}
   {{- else }}
-  db.json: {{.Files.Get "files/db.json" | printf "%s" | indent 4}}
+  db.json: "{}"
   {{- end }}

@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "go-vln.fullname" . }}
+  labels:
+    {{- include "go-vln.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "go-vln.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/db: {{ include (print $.Template.BasePath "/db-cm.yaml") . | sha256sum }}
+      labels:
+        {{- include "go-vln.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "go-vln.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if eq .Values.vln.backend "file" }}
+      volumes:
+        - name: vln-db
+          configMap:
+            name: symlink-database
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- if eq .Values.vln.backend "file" }}
+          volumeMounts:
+            - name: vln-db
+              mountPath: /db.json
+              subPath: db.json
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          args: 
+            - proxy
+            - -b
+            - {{ .Values.vln.backend }}
+            {{- if eq .Values.vln.backend "file" }}
+            - -f
+            - {{ .Values.vln.file.path }}
+            {{- end }}
+            - -A
+            - {{ required "Vault server address (vln.vault.address)" .Values.vln.vault.address }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 1323
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: symlink-database
+data:
+  {{- if .Values.vln.database }}
+  db.json: {{ .Values.vln.database | toJson }}
+  {{- else }}
+  db.json: {{.Files.Get "files/db.json" | printf "%s" | indent 4}}
+  {{- end }}
